@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PointProcessorUI": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\NetLab_Zakhar_Khakhalin\\netlab\\CSharp\\CSharp 01 Intro\\CSharp 01\\01_PointProcessor"
+    }
+  }
+}

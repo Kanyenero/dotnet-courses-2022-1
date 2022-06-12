@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatrixUI", "MatrixUI\MatrixUI.csproj", "{9A3460DF-A3E4-4242-B96E-8CC2DBAC9D0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Matrix", "Matrix\Matrix.csproj", "{000D6206-2E13-4FEF-AC96-7731701A76D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixTests", "MatrixTests\MatrixTests.csproj", "{9E1220B2-647F-41F7-93E4-D24AE0535E6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A3460DF-A3E4-4242-B96E-8CC2DBAC9D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A3460DF-A3E4-4242-B96E-8CC2DBAC9D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A3460DF-A3E4-4242-B96E-8CC2DBAC9D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A3460DF-A3E4-4242-B96E-8CC2DBAC9D0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{000D6206-2E13-4FEF-AC96-7731701A76D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000D6206-2E13-4FEF-AC96-7731701A76D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000D6206-2E13-4FEF-AC96-7731701A76D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000D6206-2E13-4FEF-AC96-7731701A76D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E1220B2-647F-41F7-93E4-D24AE0535E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E1220B2-647F-41F7-93E4-D24AE0535E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E1220B2-647F-41F7-93E4-D24AE0535E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E1220B2-647F-41F7-93E4-D24AE0535E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F4D429E-11C1-4C60-9DE6-2A0A0587BB66}
+	EndGlobalSection
+EndGlobal
