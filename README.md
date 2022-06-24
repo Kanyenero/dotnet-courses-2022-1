@@ -1,4 +1,4 @@
-### EPAM Internal .NET Course Repo
+### EPAM .NET Internal Course Repo
 
 - В директории CSharp находятся задания 1 модуля:
   - Intro,
