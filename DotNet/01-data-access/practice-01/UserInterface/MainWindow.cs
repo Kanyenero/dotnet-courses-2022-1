@@ -85,7 +85,7 @@ namespace UserInterface
                     connection = new SqlConnection(connectionString);
                     break;
 
-                case "OleDb":
+                case "OLE DB":
                     connection = new OleDbConnection(connectionString);
                     break;
             }
