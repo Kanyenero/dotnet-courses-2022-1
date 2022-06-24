@@ -5,5 +5,5 @@
 - Пользователь должен иметь возможность задать строку соединения с БД.
 
 ### Результат
-![SQL](Screenshot 1.png)
-![OLE DB](Screenshot 2.png)
+![SQL](../practice-01/Screenshot%201.PNG)
+![OLE DB](../practice-01/Screenshot%202.PNG)
