@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0-preview.5.22301.12" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BusinessLogic\Attendance\Attendance.csproj" />
+    <ProjectReference Include="..\..\BusinessLogic\Database\Database.csproj" />
+    <ProjectReference Include="..\..\BusinessLogic\Lecture\Lecture.csproj" />
+    <ProjectReference Include="..\..\BusinessLogic\Student\Student.csproj" />
+    <ProjectReference Include="..\..\Common\Entites\Entities.csproj" />
+    <ProjectReference Include="..\..\DataAccess\AttendanceEngine\AttendanceEngine.csproj" />
+    <ProjectReference Include="..\..\DataAccess\DatabaseEngine\DatabaseEngine.csproj" />
+    <ProjectReference Include="..\..\DataAccess\LectureEngine\LectureEngine.csproj" />
+    <ProjectReference Include="..\..\DataAccess\StudentEngine\StudentEngine.csproj" />
+    <ProjectReference Include="..\CommandLineParsing\CommandLineParsing.csproj" />
+  </ItemGroup>
+
+</Project>

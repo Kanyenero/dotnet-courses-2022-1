@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UserInterface": {
+      "commandName": "Project",
+      "commandLineArgs": "init"
+    }
+  }
+}
