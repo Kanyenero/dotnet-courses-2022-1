@@ -23,3 +23,12 @@
     - выводить Topic лекции
     - если студент не посетил ни одной лекции, все равно выводить его имя
     - если лекцию никто не посеил, все равно выводить дату и тему
+
+### Результаты
+![Init Console](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-02/Resources/init3.png?raw=true)
+![Init Result 1](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-02/Resources/init1.png?raw=true)
+![Init Result 2](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-02/Resources/init2.png?raw=true)
+![Student](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-02/Resources/students.png?raw=true)
+![Lecture](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-02/Resources/lectures.png?raw=true)
+![Attend](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-02/Resources/attend.png?raw=true)
+![Report](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-02/Resources/report.png?raw=true)
