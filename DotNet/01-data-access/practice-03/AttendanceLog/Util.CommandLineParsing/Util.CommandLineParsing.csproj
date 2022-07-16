@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>$(SolutionName.Replace(" ", "_")).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic.Attendance\BusinessLogic.Attendance.csproj" />
+    <ProjectReference Include="..\BusinessLogic.Database\BusinessLogic.Database.csproj" />
+    <ProjectReference Include="..\BusinessLogic.Lecture\BusinessLogic.Lecture.csproj" />
+    <ProjectReference Include="..\BusinessLogic.Student\BusinessLogic.Student.csproj" />
+    <ProjectReference Include="..\Common.Entites\Common.Entities.csproj" />
+  </ItemGroup>
+
+</Project>
