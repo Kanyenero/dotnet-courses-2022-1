@@ -5,5 +5,5 @@
 - Пользователь должен иметь возможность задать строку соединения с БД.
 
 ### Результат
-![SQL](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-01/img/Screenshot%201.PNG?raw=true)
-![OLE DB](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-01/img/Screenshot%202.PNG?raw=true)
+![SQL](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-01/Resources/Screenshot%201.PNG?raw=true)
+![OLE DB](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/01-data-access/practice-01/Resources/Screenshot%202.PNG?raw=true)
