@@ -9,6 +9,7 @@ namespace DotNetCourse.CarRental
         private Customer _customer = new();
 
         private readonly IDataProvider _dataProvider;
+        private ISerializer _serializer;
 
         public MainForm(IDataProvider dataProvider)
         {
@@ -51,6 +52,53 @@ namespace DotNetCourse.CarRental
         private void MainForm_Load(object sender, EventArgs e)
         {
             tctrlBody.SelectTab(tpgAbout);
+        }
+
+        private void mstpTopMenuFileExportToXmlFreeVehicles_Click(object sender, EventArgs e)
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                FileName = "New XML Document.xml",
+                Filter = "XML files (*.xml)|*.xml",
+                RestoreDirectory = true
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var collectionToSerialize = _dataProvider.GetVehiclesBy(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    isRented: false)
+                    .ToList();
+
+                _serializer = new XmlSerializer(saveFileDialog.FileName);
+
+                bool collectionSerialized = _serializer.TrySerializeCollection(collectionToSerialize);
+
+                if (collectionSerialized)
+                {
+                    MessageBox.Show(
+                        "The export operation was successful.",
+                        "Export to Xml",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    return;
+                }
+
+                MessageBox.Show(
+                    "The export operation failed.",
+                    "Export to Xml",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
         }
 
         private void mstpTopMenuAbout_Click(object sender, EventArgs e)
@@ -337,7 +385,7 @@ namespace DotNetCourse.CarRental
             if (_vehicle == null)
             {
                 MessageBox.Show(
-                    $"Select vehicle first!",
+                    "Select vehicle first!",
                     "New Rental Registration",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -365,7 +413,7 @@ namespace DotNetCourse.CarRental
             if (rentalRegistered)
             {
                 MessageBox.Show(
-                    $"Successfully registered a new rental!\n" +
+                    "Successfully registered a new rental!\n" +
                     $"Customer: {_customer}\n" +
                     $"Vehicle: {_vehicle}\n" +
                     $"Registration Date: {registrationDate}\n" +
@@ -431,7 +479,7 @@ namespace DotNetCourse.CarRental
                     return;
 
                 MessageBox.Show(
-                    refund + "$", 
+                    $"{refund}$", 
                     "Refund", 
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);

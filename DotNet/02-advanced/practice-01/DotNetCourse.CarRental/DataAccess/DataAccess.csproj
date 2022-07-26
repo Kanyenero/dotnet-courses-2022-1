@@ -19,6 +19,9 @@
     <Reference Include="DotNetCourse.Utils.Runtime">
       <HintPath>..\..\..\..\DotNetCourse.Utils\Runtime\bin\Debug\net6.0\DotNetCourse.Utils.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="SearchTrees">
+      <HintPath>..\..\..\..\..\CSharp\05-final\Serialization\Final_Serialization\SearchTrees\bin\Debug\net6.0\SearchTrees.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

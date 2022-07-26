@@ -146,6 +146,9 @@
             this.mstpTopMenu = new System.Windows.Forms.MenuStrip();
             this.mstpTopMenuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mstpTopMenuAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mstpTopMenuFileExportToXml = new System.Windows.Forms.ToolStripMenuItem();
+            this.mstpTopMenuFileExportToXmlFreeVehicles = new System.Windows.Forms.ToolStripMenuItem();
+            this.mstpTopMenuFileExportToXmlCustomers = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlLayout.SuspendLayout();
             this.pnlMenuLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbxLogo)).BeginInit();
@@ -1678,6 +1681,8 @@
             // 
             // mstpTopMenuFile
             // 
+            this.mstpTopMenuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mstpTopMenuFileExportToXml});
             this.mstpTopMenuFile.Name = "mstpTopMenuFile";
             this.mstpTopMenuFile.Size = new System.Drawing.Size(46, 24);
             this.mstpTopMenuFile.Text = "File";
@@ -1688,6 +1693,28 @@
             this.mstpTopMenuAbout.Size = new System.Drawing.Size(64, 24);
             this.mstpTopMenuAbout.Text = "About";
             this.mstpTopMenuAbout.Click += new System.EventHandler(this.mstpTopMenuAbout_Click);
+            // 
+            // mstpTopMenuFileExportToXml
+            // 
+            this.mstpTopMenuFileExportToXml.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mstpTopMenuFileExportToXmlFreeVehicles,
+            this.mstpTopMenuFileExportToXmlCustomers});
+            this.mstpTopMenuFileExportToXml.Name = "mstpTopMenuFileExportToXml";
+            this.mstpTopMenuFileExportToXml.Size = new System.Drawing.Size(224, 26);
+            this.mstpTopMenuFileExportToXml.Text = "Export to Xml";
+            // 
+            // mstpTopMenuFileExportToXmlFreeVehicles
+            // 
+            this.mstpTopMenuFileExportToXmlFreeVehicles.Name = "mstpTopMenuFileExportToXmlFreeVehicles";
+            this.mstpTopMenuFileExportToXmlFreeVehicles.Size = new System.Drawing.Size(224, 26);
+            this.mstpTopMenuFileExportToXmlFreeVehicles.Text = "Free Vehicles";
+            this.mstpTopMenuFileExportToXmlFreeVehicles.Click += new System.EventHandler(this.mstpTopMenuFileExportToXmlFreeVehicles_Click);
+            // 
+            // mstpTopMenuFileExportToXmlCustomers
+            // 
+            this.mstpTopMenuFileExportToXmlCustomers.Name = "mstpTopMenuFileExportToXmlCustomers";
+            this.mstpTopMenuFileExportToXmlCustomers.Size = new System.Drawing.Size(224, 26);
+            this.mstpTopMenuFileExportToXmlCustomers.Text = "Customers";
             // 
             // MainForm
             // 
@@ -1874,5 +1901,8 @@
         private Panel pnlCustomerHistoryFilters;
         private Button btnCustomerHistoryApplyFilters;
         private Button btnRegisterNewCustomerApplyFilters;
+        private ToolStripMenuItem mstpTopMenuFileExportToXml;
+        private ToolStripMenuItem mstpTopMenuFileExportToXmlFreeVehicles;
+        private ToolStripMenuItem mstpTopMenuFileExportToXmlCustomers;
     }
 }
