@@ -2,7 +2,7 @@
 
 namespace DotNetCourse.CarRental.Models
 {
-    public class Vehicle : IEquatable<Vehicle>
+    public class Vehicle : IEquatable<Vehicle>, IComparable<Vehicle>
     {
         [DisplayName("Id")]
         public int Id
@@ -112,6 +112,46 @@ namespace DotNetCourse.CarRental.Models
                    MaxPassengerCapacity == other.MaxPassengerCapacity &&
                    InsuranceAmountPerYear == other.InsuranceAmountPerYear &&
                    PricePerHour == other.PricePerHour;
+        }
+
+        public int CompareTo(Vehicle? other)
+        {
+            if (other == null) 
+                throw new ArgumentNullException(nameof(other));
+
+            if (this == other) 
+                return 0;
+
+            int result;
+
+            result = Id.CompareTo(other.Id);
+            if (result != 0) return result;
+
+            result = Manufacturer.CompareTo(other.Manufacturer);
+            if (result != 0) return result;
+
+            result = Model.CompareTo(other.Model);
+            if (result != 0) return result;
+
+            result = YearOfProduction.CompareTo(other.YearOfProduction);
+            if (result != 0) return result;
+
+            result = RegistrationNumber.CompareTo(other.RegistrationNumber);
+            if (result != 0) return result;
+
+            result = Mileage.CompareTo(other.Mileage);
+            if (result != 0) return result;
+
+            result = EngineVolume.CompareTo(other.EngineVolume);
+            if (result != 0) return result;
+
+            result = MaxPassengerCapacity.CompareTo(other.MaxPassengerCapacity);
+            if (result != 0) return result;
+
+            result = InsuranceAmountPerYear.CompareTo(other.InsuranceAmountPerYear);
+            if (result != 0) return result;
+
+            return PricePerHour.CompareTo(other.PricePerHour);
         }
     }
 }
