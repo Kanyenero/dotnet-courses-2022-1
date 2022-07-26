@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>$(SolutionName.Replace(" ", "_")).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>$(SolutionName.Replace(" ", "_")).$(MSBuildProjectName)</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotNetCourse.Utils.Collections">
+      <HintPath>..\..\..\..\DotNetCourse.Utils\Collections\bin\Debug\net6.0\DotNetCourse.Utils.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetCourse.Utils.Runtime">
+      <HintPath>..\..\..\..\DotNetCourse.Utils\Runtime\bin\Debug\net6.0\DotNetCourse.Utils.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
