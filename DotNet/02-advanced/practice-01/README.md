@@ -36,3 +36,4 @@
 ![Customer History](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/02-advanced/practice-01/Resources/customer_history.png?raw=true)
 
 ### Результаты выполнения задания №2
+![Xml Serialized Tree](https://github.com/Kanyenero/dotnet-cources-2022-1/blob/master/DotNet/02-advanced/practice-01/Resources/xml.png?raw=true)
