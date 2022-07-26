@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DotNetCourse.Utils.Expressions
+namespace DotNetCourse.Utils.Runtime
 {
     public class GenericFilter<TItem>
     {

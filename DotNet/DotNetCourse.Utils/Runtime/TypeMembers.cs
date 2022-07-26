@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-namespace DotNetCourse.Utils.ComponentModel
+namespace DotNetCourse.Utils.Runtime
 {
-    public static class Attributes
+    public static class TypeMembers
     {
         public static T GetAttribute<T>(this MemberInfo member, bool isRequired)
             where T : Attribute
@@ -46,6 +46,21 @@ namespace DotNetCourse.Utils.ComponentModel
                 return null!;
 
             return memberExpr.Member;
+        }
+
+        public static bool TrySetProperty<T>(this T obj, string propertyName, object value)
+            where T : class
+        {
+            var prop = obj.GetType().GetProperty(propertyName);
+
+            if (prop != null && prop.CanWrite)
+            {
+                prop.SetValue(obj, value, null);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

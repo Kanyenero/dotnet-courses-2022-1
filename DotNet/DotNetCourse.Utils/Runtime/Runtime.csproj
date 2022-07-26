@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>$(SolutionName.Replace(" ", "_")).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-    <AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>$(SolutionName.Replace(" ", "_")).$(MSBuildProjectName)</AssemblyName>
+    <AssemblyVersion></AssemblyVersion>
   </PropertyGroup>
 
 </Project>
