@@ -1,23 +1,66 @@
 ## Задание
 
-Разработать консольное приложение, позволяющее отмечать посещение студентов на паре и оценку.
+Разработать консольное приложение, позволяющее отмечать посещение студентов на лекции и оценку.
+Реализовать стандартные операции CRUD для студентов и лекций.
 
 Функциональность.
-1. AttendanceLog.exe -init (инициализировать базу данных)  
-    Создать:  
-    - таблицу студентов (Students {FirstName, LastName, Passport})
-    - таблицу лекций (Lecture {Date, Topic})
-    - таблицу посещаемости (Attendance {LectureDate, LectureTopic, StudentFirstName, StudentLastName, Mark})
+1. Инициализировать базу данных  
+  ```
+  AttendanceLog.exe init
+  ```
+  Создать:
+    - таблицу студентов  
+      Students {StudentID, FirstName, LastName, Passport},  
+    - таблицу лекций  
+      Lecture {LectureID, Date, Course, Topic},  
+    - таблицу посещаемости  
+      Attendance {LectureID, StudentID, Mark}  
     - хранимую процедуру, отмечающую определенного студента на лекции  
-      MarkAttendance @StudentName, @LectureDate, @Mark
+      MarkAttendance @LectureID, @StudentID, @Mark
 
-2. AttendanceLog.exe -lecture &lt;DATE&gt; &lt;TOPIC&gt; (добавить лекцию в таблицу лекций (по дате))  
-3. AttendanceLog.exe -student &lt;FIRSTNAME&gt; &lt;LASTNAME&gt; &lt;PASSPORT&gt; (добавить студента в таблицу студентов)  
-4. AttendanceLog.exe -attend &lt;STUDENT_NAME&gt; &lt;DATE&gt; &lt;MARK&gt; (добавить запись о посещении студента в таблице посещаемости)  
-5. AttendanceLog.exe -report (вывести отчет о посещаемости)  
+2. Добавить/получить/обновить/удалить лекцию (по дате)  
+  ```powershell
+  AttendanceLog.exe lecture --add <DATE> <COURSE> <TOPIC>
+
+  AttendanceLog.exe lecture --get <ID>
+  AttendanceLog.exe lecture --get <DATE> <COURSE> <TOPIC>
+
+  AttendanceLog.exe lecture --update <ID> <DATE> <COURSE> <TOPIC>
+
+  AttendanceLog.exe lecture --delete <ID>
+  AttendanceLog.exe lecture --delete <DATE> <COURSE> <TOPIC>
+  ```
+3. Добавить студента в таблицу студентов  
+  ```powershell
+  AttendanceLog.exe student --add <FIRSTNAME> <LASTNAME> <PASSPORT>
+
+  AttendanceLog.exe student --get <ID>
+  AttendanceLog.exe student --get <FIRSTNAME> <LASTNAME> <PASSPORT>
+
+  AttendanceLog.exe student --update <ID> <FIRSTNAME> <LASTNAME> <PASSPORT>
+
+  AttendanceLog.exe student --delete <ID>
+  AttendanceLog.exe student --delete <FIRSTNAME> <LASTNAME> <PASSPORT>
+  ```
+4. Добавить запись о посещении студента в таблице посещаемости  
+  ```powershell
+  AttendanceLog.exe attend <LECTURE_ID> <STUDENT_ID> <MARK>
+  ```
+5. Вывести отчет о посещаемости  
+  ```powershell
+  AttendanceLog.exe report
+  ```
     - выводить Topic лекции;
     - если студент не посетил ни одной лекции, все равно выводить его имя и фамилию;
     - если лекцию никто не посетил, все равно выводить дату и тему.
+
+Дополнительно:
+- создать алиасы для команд, чтобы их можно было вводить более удобным способом, например  
+  ```
+  AttendanceLog.exe lecture --с &lt;DATE&gt; &lt;TOPIC&gt;
+  ```
+  
+
 
 <!-- ## Результаты
 ### Команда init
