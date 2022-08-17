@@ -2,21 +2,16 @@
 {
     public class SqlProvider : IDataProvider
     {
-        private readonly DataAccess.DatabaseEngine.IDataProvider provider;
+        private DataAccess.DatabaseEngine.IDataProvider Provider { get; set; }
 
         public SqlProvider(DataAccess.DatabaseEngine.IDataProvider provider)
         {
-            this.provider = provider;
+            Provider = provider;
         }
 
         public bool Init()
         {
-            return provider.Init();
-        }
-
-        public IEnumerable<Entities.Attendance> GetReport()
-        {
-            return provider.GetReport();
+            return Provider.Init();
         }
     }
 }

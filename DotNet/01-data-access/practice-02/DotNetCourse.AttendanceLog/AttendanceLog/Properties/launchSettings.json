@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "UserInterface": {
+    "AttendanceLog": {
       "commandName": "Project",
-      "commandLineArgs": "init"
+      "commandLineArgs": "attendance get LectureId:1 StudentId:1"
     }
   }
 }

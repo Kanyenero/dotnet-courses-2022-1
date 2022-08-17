@@ -1,8 +1,15 @@
-﻿namespace DotNetCourse.AttendanceLog.DataAccess.AttendanceEngine
+﻿using DotNetCourse.AttendanceLog.Models;
+
+namespace DotNetCourse.AttendanceLog.DataAccess.AttendanceEngine
 {
     public interface IDataProvider
     {
-        int Attend(int? studentId, int? lectureId, int? mark);
-        int Attend(Entities.Student student, Entities.Lecture lecture, int? mark);
+        int Add(Index<int, int> id, int? mark);
+
+        Attendance Get(Index<int, int> id);
+
+        int Delete(Index<int, int> id);
+
+        IEnumerable<Attendance> GetAll();
     }
 }

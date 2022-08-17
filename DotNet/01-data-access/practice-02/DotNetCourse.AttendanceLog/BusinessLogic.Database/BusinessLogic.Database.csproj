@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess.DatabaseEngine\DataAccess.DatabaseEngine.csproj" />
-    <ProjectReference Include="..\Entites\Entities.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
 </Project>
