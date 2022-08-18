@@ -61,7 +61,7 @@
     ```powershell
     > .\AttendanceLog.exe init
     ```
-    ![tables](https://github.com/Kanyenero/dotnet-courses-2022-1/raw/master/DotNet/01-data-access/practice-03/Resources/tables.png "Созданные таблицы в MS SQL Server")
+    ![tables](https://github.com/Kanyenero/dotnet-courses-2022-1/blob/master/DotNet/01-data-access/practice-03/Resources/tables.png?raw=true)
 - Добавление сущности
     ```powershell
     > .\AttendanceLog.exe student add FirstName:Kendrick LastName:Lamar UniqueLogin:KendrickLamar1
