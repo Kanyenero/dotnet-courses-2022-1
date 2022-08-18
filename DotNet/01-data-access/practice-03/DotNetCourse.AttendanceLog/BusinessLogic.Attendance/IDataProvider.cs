@@ -1,9 +1,15 @@
-﻿namespace DotNetCourse.AttendanceLog.BusinessLogic.Attendance
+﻿using DotNetCourse.AttendanceLog.Models;
+
+namespace DotNetCourse.AttendanceLog.BusinessLogic.Attendance
 {
     public interface IDataProvider
     {
-        int Attend(int? studentId, int? lectureId, int? mark);
-        int Attend(Entities.Student student, Entities.Lecture lecture, int? mark);
-        int Attend(Entities.Attendance attendance);
+        int Add(int lectureId, int studentId, int? mark);
+
+        Models.Attendance? Get(int lectureId, int studentId);
+
+        int Delete(int lectureId, int studentId);
+
+        IEnumerable<Models.Attendance> GetAll();
     }
 }

@@ -5,12 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>$(SolutionName.Replace(" ", "_")).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-    <AssemblyName>$(SolutionName.Replace(" ", "_")).$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
-    <ProjectReference Include="..\DataAccess.StudentEngine\DataAccess.StudentEngine.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 

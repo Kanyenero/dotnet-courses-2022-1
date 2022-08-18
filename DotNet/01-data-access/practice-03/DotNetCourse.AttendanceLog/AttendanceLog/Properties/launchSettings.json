@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "UserInterface": {
+    "AttendanceLog": {
       "commandName": "Project",
-      "commandLineArgs": "report"
+      "commandLineArgs": "attendance getall"
     }
   }
 }

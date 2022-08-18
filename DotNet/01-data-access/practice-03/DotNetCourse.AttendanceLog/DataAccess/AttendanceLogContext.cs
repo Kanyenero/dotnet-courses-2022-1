@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using DotNetCourse.AttendanceLog.Entities;
+using DotNetCourse.AttendanceLog.Models;
 
 namespace DotNetCourse.AttendanceLog.DataAccess
 {
     public class AttendanceLogContext : DbContext
     {
-        public DbSet<Attendance> Attendance { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Lecture> Lectures { get; set; }
 
@@ -27,47 +27,45 @@ namespace DotNetCourse.AttendanceLog.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Student>()
-                .Property(s => s.FirstName)
-                .HasColumnName("First_Name");
+                .Property(model => model.Id)
+                .HasColumnName("StudentID");
 
             modelBuilder.Entity<Student>()
-                .Property(s => s.MiddleName)
-                .HasColumnName("Middle_Name");
+                .Property(model => model.UniqueLogin)
+                .HasColumnName("UQ_Login");
 
-            modelBuilder.Entity<Student>()
-                .Property(s => s.LastName)
-                .HasColumnName("Last_Name");
-
-            modelBuilder.Entity<Student>()
-                .Property(s => s.PassportSeriesAndNumber)
-                .HasColumnName("UQ_Passport_Series_and_Number");
+            modelBuilder.Entity<Lecture>()
+                .Property(model => model.Id)
+                .HasColumnName("LectureID");
 
             modelBuilder.Entity<Attendance>()
-                .Property(a => a.StudentId)
-                .HasColumnName("Student_Id");
+                .Property(model => model.LectureId)
+                .HasColumnName("LectureID");
 
             modelBuilder.Entity<Attendance>()
-                .Property(a => a.LectureId)
-                .HasColumnName("Lecture_Id");
+                .Property(model => model.StudentId)
+                .HasColumnName("StudentID");
 
             modelBuilder.Entity<Attendance>()
-                .Ignore(a => a.StudentFirstName);
+                .Ignore(model => model.LectureDate);
 
             modelBuilder.Entity<Attendance>()
-                .Ignore(a => a.StudentMiddleName);
+                .Ignore(model => model.LectureCourse);
 
             modelBuilder.Entity<Attendance>()
-                .Ignore(a => a.StudentLastName);
+                .Ignore(model => model.LectureTopic);
 
             modelBuilder.Entity<Attendance>()
-                .Ignore(a => a.LectureTopic);
+                .Ignore(model => model.StudentUniqueLogin);
 
             modelBuilder.Entity<Attendance>()
-                .Ignore(a => a.LectureDateTime);
+                .Ignore(model => model.StudentFirstName);
 
             modelBuilder.Entity<Attendance>()
-                .HasKey(attendance => new { attendance.StudentId, attendance.LectureId });
+                .Ignore(model => model.StudentLastName);
 
+            modelBuilder.Entity<Attendance>()
+                .HasKey(attendance => new { attendance.LectureId, attendance.StudentId });
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using DotNetCourse.AttendanceLog.Entities;
 
 namespace DotNetCourse.AttendanceLog.DataAccess.DatabaseEngine
 {
@@ -29,63 +28,13 @@ namespace DotNetCourse.AttendanceLog.DataAccess.DatabaseEngine
 
                     executedWithSuccess = true;
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     executedWithSuccess = false;
                 }
             }
 
             return executedWithSuccess;
-        }
-
-        public IEnumerable<Attendance> GetReport()
-        {
-            var attendances = new List<Attendance>();
-
-            using (var db = new AttendanceLogContext(_options))
-            {
-                try
-                {
-                    var studentAttendance =
-                        db.Students.Join(
-                            db.Attendance,
-                            s => s.Id,
-                            a => a.StudentId,
-                            (s, a) => new
-                            {
-                                LectureId = a.LectureId,
-                                StudentId = a.StudentId,
-                                StudentFirstName = s.FirstName,
-                                StudentMiddleName = s.MiddleName,
-                                StudentLastName = s.LastName,
-                                Mark = a.Mark
-                            });
-
-                    var lectureStudentAttendance =
-                        db.Lectures.Join(
-                            studentAttendance,
-                            l => l.Id,
-                            sa => sa.LectureId,
-                            (l, sa) => new Attendance
-                            (
-                                l.Id,
-                                l.Date,
-                                l.Topic,
-                                sa.StudentId,
-                                sa.StudentFirstName,
-                                sa.StudentMiddleName,
-                                sa.StudentLastName,
-                                sa.Mark
-                            ));
-
-                    attendances = lectureStudentAttendance.ToList();
-                }
-                catch (Exception)
-                {
-                }
-            }
-
-            return attendances;
         }
     }
 }
