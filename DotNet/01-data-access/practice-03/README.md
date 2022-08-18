@@ -11,11 +11,9 @@
     - таблицу студентов  
       Students {StudentID, FirstName, LastName, UniqueLogin},
     - таблицу лекций
-      Lecture {LectureID, Date, Course, Topic},
+      Lectures {LectureID, Date, Course, Topic},
     - таблицу посещаемости
-      Attendance {LectureID, StudentID, Mark}
-    - хранимую процедуру, отмечающую определенного студента на лекции
-      MarkAttendance @LectureID, @StudentID, @Mark
+      Attendances {LectureID, StudentID, Mark}.
 
 2. Добавить/получить/обновить/удалить лекцию (по дате):
     ```powershell
@@ -45,15 +43,13 @@
 
 4. Добавить запись о посещении студента в таблице посещаемости (использовать хранимую процедуру):
     ```powershell
-    AttendanceLog.exe attend <LECTURE_ID> <STUDENT_ID> <MARK>
+    AttendanceLog.exe attendance --add <LECTURE_ID> <STUDENT_ID> <MARK>
     ```
 
 5. Вывести отчет о посещаемости:
     ```powershell
-    AttendanceLog.exe report
+    AttendanceLog.exe attendance --getall
     ```
-    - если студент не посетил ни одной лекции, все равно выводить его имя и фамилию;
-    - если лекцию никто не посетил, все равно выводить дату и тему.
 
 
 ## Примеры использования
