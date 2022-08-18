@@ -16,22 +16,22 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Lecture
             return Provider.Add(course, topic, date);
         }
 
-        public Models.Lecture Get(Index<int> id)
+        public Models.Lecture? Get(int id)
         {
             return Provider.Get(id);
         }
 
-        public Models.Lecture Get(string course, string topic, DateTime date)
+        public Models.Lecture? Get(string course, string topic, DateTime date)
         {
             return Provider.Get(course, topic, date);
         }
 
-        public int Update(Index<int> id, string course, string topic, DateTime date)
+        public int Update(int id, string course, string topic, DateTime date)
         {
             return Provider.Update(id, course, topic, date);
         }
 
-        public int Delete(Index<int> id)
+        public int Delete(int id)
         {
             return Provider.Delete(id);
         }
@@ -64,22 +64,21 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Lecture
             if (e == null)
                 return;
 
-            Models.Lecture model = null!;
+            Models.Lecture? model = null;
 
-            if (e.Id == null && e.Model != null)
+            if (e.Id != null && e.Model == null)
+            {
+                model = Get(((Identifier<int>)e.Id).Value);
+            }
+            else if (e.Id == null && e.Model != null)
             {
                 model = Get(e.Model.Course, e.Model.Topic, e.Model.Date);
             }
 
-            if (e.Id != null && e.Model == null)
-            {
-                model = Get((Index<int>)e.Id);
-            }
-
             if (model == null)
-                return;
-
-            Console.WriteLine(model);
+                Console.WriteLine("Model read failed.");
+            else
+                Console.WriteLine(model);
         }
 
         public void OnUpdate(object? sender, ModelEventArgs<Models.Lecture> e)
@@ -87,7 +86,7 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Lecture
             if (e == null || e.Model == null)
                 return;
 
-            int rowsAffected = Update((Index<int>)e.Id, e.Model.Course, e.Model.Topic, e.Model.Date);
+            int rowsAffected = Update(e.Model.Id, e.Model.Course, e.Model.Topic, e.Model.Date);
 
             if (rowsAffected == 0)
                 Console.WriteLine("An error occurred while updating.");
@@ -102,18 +101,17 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Lecture
 
             int rowsAffected = 0;
 
-            if (e.Id == null && e.Model != null)
+            if (e.Id != null && e.Model == null)
+            {
+                rowsAffected = Delete(((Identifier<int>)e.Id).Value);
+            }
+            else if (e.Id == null && e.Model != null)
             {
                 rowsAffected = Delete(e.Model.Course, e.Model.Topic, e.Model.Date);
             }
 
-            if (e.Id != null && e.Model == null)
-            {
-                rowsAffected = Delete((Index<int>)e.Id);
-            }
-
             if (rowsAffected == 0)
-                Console.WriteLine($"An error occurred while deleting.");
+                Console.WriteLine("An error occurred while deleting.");
             else
                 Console.WriteLine("Object was deleted successfully.");
         }

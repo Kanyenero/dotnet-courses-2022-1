@@ -2,7 +2,7 @@
   "profiles": {
     "AttendanceLog": {
       "commandName": "Project",
-      "commandLineArgs": "attendance get LectureId:1 StudentId:1"
+      "commandLineArgs": "attendance getall"
     }
   }
 }

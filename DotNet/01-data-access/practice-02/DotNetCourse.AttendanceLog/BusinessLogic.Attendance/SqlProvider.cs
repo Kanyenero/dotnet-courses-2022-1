@@ -11,19 +11,19 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Attendance
             Provider = provider;
         }
 
-        public int Add(Index<int, int> id, int? mark)
+        public int Add(int lectureId, int studentId, int? mark)
         {
-            return Provider.Add(id, mark);
+            return Provider.Add(lectureId, studentId, mark);
         }
 
-        public Models.Attendance Get(Index<int, int> id)
+        public Models.Attendance? Get(int lectureId, int studentId)
         {
-            return Provider.Get(id);
+            return Provider.Get(lectureId, studentId);
         }
 
-        public int Delete(Index<int, int> id)
+        public int Delete(int lectureId, int studentId)
         {
-            return Provider.Delete(id);
+            return Provider.Delete(lectureId, studentId);
         }
 
         public IEnumerable<Models.Attendance> GetAll()
@@ -33,10 +33,19 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Attendance
 
         public void OnAdd(object? sender, ModelEventArgs<Models.Attendance> e)
         {
-            if (e == null || e.Model == null)
+            if (e == null)
                 return;
 
-            int rowsAffected = Add(e.Model.Id, e.Model.Mark);
+            int rowsAffected = 0;
+
+            if (e.Id != null && e.Model == null)
+            {
+                rowsAffected = Add(((Identifier<int, int>)e.Id).Value1, ((Identifier<int, int>)e.Id).Value2, null);
+            }
+            else if (e.Id == null && e.Model != null)
+            {
+                rowsAffected = Add(e.Model.LectureId, e.Model.StudentId, e.Model.Mark);
+            }
 
             if (rowsAffected == 0)
                 Console.WriteLine("An error occurred while adding.");
@@ -54,12 +63,12 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Attendance
             if (e == null || e.Id == null)
                 return;
 
-            var model = Get((Index<int, int>)e.Id);
+            var model = Get(((Identifier<int, int>)e.Id).Value1, ((Identifier<int, int>)e.Id).Value2);
 
             if (model == null)
-                return;
-
-            Console.WriteLine(model);
+                Console.WriteLine("Model read failed.");
+            else
+                Console.WriteLine(model);
         }
 
         public void OnDelete(object? sender, ModelEventArgs<Models.Attendance> e)
@@ -67,10 +76,10 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Attendance
             if (e == null || e.Id == null)
                 return;
 
-            int rowsAffected = Delete((Index<int, int>)e.Id);
+            int rowsAffected = Delete(((Identifier<int, int>)e.Id).Value1, ((Identifier<int, int>)e.Id).Value2);
 
             if (rowsAffected == 0)
-                Console.WriteLine($"An error occurred while deleting.");
+                Console.WriteLine("An error occurred while deleting.");
             else
                 Console.WriteLine("Object was deleted successfully.");
         }

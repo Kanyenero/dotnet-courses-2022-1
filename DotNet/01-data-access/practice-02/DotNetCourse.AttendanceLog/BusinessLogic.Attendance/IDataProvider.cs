@@ -4,11 +4,11 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Attendance
 {
     public interface IDataProvider
     {
-        int Add(Index<int, int> id, int? mark);
+        int Add(int lectureId, int studentId, int? mark);
 
-        Models.Attendance Get(Index<int, int> id);
+        Models.Attendance? Get(int lectureId, int studentId);
 
-        int Delete(Index<int, int> id);
+        int Delete(int lectureId, int studentId);
 
         IEnumerable<Models.Attendance> GetAll();
     }

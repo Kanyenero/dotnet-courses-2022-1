@@ -2,7 +2,7 @@
 
 namespace DotNetCourse.AttendanceLog.BusinessLogic
 {
-    public interface IInvocableProvider<T> where T : class, IIndexableModel<Models.Index>
+    public interface IInvocableProvider<T> where T : class
     {
         void OnAdd(object? sender, ModelEventArgs<T> e);
 

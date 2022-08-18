@@ -6,13 +6,13 @@ namespace DotNetCourse.AttendanceLog.DataAccess.LectureEngine
     {
         int Add(string course, string topic, DateTime date);
 
-        Lecture Get(Index<int> id);
+        Lecture? Get(int id);
 
-        Lecture Get(string course, string topic, DateTime date);
+        Lecture? Get(string course, string topic, DateTime date);
 
-        int Update(Index<int> id, string course, string topic, DateTime date);
+        int Update(int id, string course, string topic, DateTime date);
 
-        int Delete(Index<int> id);
+        int Delete(int id);
 
         int Delete(string course, string topic, DateTime date);
 

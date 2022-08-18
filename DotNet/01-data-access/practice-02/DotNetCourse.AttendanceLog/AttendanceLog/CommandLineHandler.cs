@@ -51,11 +51,11 @@ namespace DotNetCourse.AttendanceLog
             return initCommand;
         }
 
-        public event ModelEventHandler<Student> AddStudentEvent = default!;
-        public event ModelEventHandler<Student> GetStudentEvent = default!;
-        public event ModelEventHandler<Student> UpdateStudentEvent = default!;
-        public event ModelEventHandler<Student> DeleteStudentEvent = default!;
-        public event ModelEventHandler<Student> GetAllStudentEvent = default!;
+        public event EventHandler<ModelEventArgs<Student>>? AddStudentEvent;
+        public event EventHandler<ModelEventArgs<Student>>? GetStudentEvent;
+        public event EventHandler<ModelEventArgs<Student>>? UpdateStudentEvent;
+        public event EventHandler<ModelEventArgs<Student>>? DeleteStudentEvent;
+        public event EventHandler<ModelEventArgs<Student>>? GetAllStudentEvent;
 
         private Command CreateStudentCommandBranch()
         {
@@ -83,12 +83,18 @@ namespace DotNetCourse.AttendanceLog
 
             addCommand.SetHandler((firstName, lastName, uniqueLogin) => 
             {
-                if (firstName == null || lastName == null || uniqueLogin == null)
+                ModelEventArgs<Student> e;
+
+                if (firstName != null && lastName != null && uniqueLogin != null)
+                {
+                    e = new ModelEventArgs<Student>(new Student(firstName, lastName, uniqueLogin));
+                }
+                else
+                {
                     return;
+                }
 
-                var student = new Student(null, firstName, lastName, uniqueLogin);
-
-                AddStudentEvent?.Invoke(this, new ModelEventArgs<Student>(student));
+                AddStudentEvent?.Invoke(this, e);
             }, 
             firstNameRequiredOption,
             lastNameRequiredOption,
@@ -105,18 +111,15 @@ namespace DotNetCourse.AttendanceLog
 
             getCommand.SetHandler((id, firstName, lastName, uniqueLogin) =>
             {
-                bool studentIdIsValid = id != 0;
-                bool studentDataIsValid = firstName != null && lastName != null && uniqueLogin != null;
-
                 ModelEventArgs<Student> e;
 
-                if (studentIdIsValid && !studentDataIsValid)
+                if (id > 0)
                 {
-                    e = new ModelEventArgs<Student>(new Index<int>(id));
+                    e = new ModelEventArgs<Student>(new Identifier<int>(id));
                 }
-                else if (!studentIdIsValid && studentDataIsValid)
+                else if (firstName != null && lastName != null && uniqueLogin != null)
                 {
-                    e = new ModelEventArgs<Student>(new Student(null, firstName!, lastName!, uniqueLogin!));
+                    e = new ModelEventArgs<Student>(new Student(firstName, lastName, uniqueLogin));
                 }
                 else
                 {
@@ -141,12 +144,18 @@ namespace DotNetCourse.AttendanceLog
 
             updateCommand.SetHandler((id, firstName, lastName, uniqueLogin) =>
             {
-                if (firstName == null || lastName == null || uniqueLogin == null)
+                ModelEventArgs<Student> e;
+
+                if (id > 0 && firstName != null && lastName != null && uniqueLogin != null)
+                {
+                    e = new ModelEventArgs<Student>(new Student(id, firstName, lastName, uniqueLogin));
+                }
+                else
+                {
                     return;
+                }
 
-                var student = new Student(new Index<int>(id), firstName, lastName, uniqueLogin);
-
-                UpdateStudentEvent?.Invoke(this, new ModelEventArgs<Student>(student));
+                UpdateStudentEvent?.Invoke(this, e);
             },
             idRequiredOption,
             firstNameRequiredOption,
@@ -164,18 +173,15 @@ namespace DotNetCourse.AttendanceLog
 
             deleteCommand.SetHandler((id, firstName, lastName, uniqueLogin) =>
             {
-                bool studentIdIsValid = id != 0;
-                bool studentDataIsValid = firstName != null && lastName != null && uniqueLogin != null;
-
                 ModelEventArgs<Student> e;
 
-                if (studentIdIsValid && !studentDataIsValid)
+                if (id > 0)
                 {
-                    e = new ModelEventArgs<Student>(new Index<int>(id));
+                    e = new ModelEventArgs<Student>(new Identifier<int>(id));
                 }
-                else if (!studentIdIsValid && studentDataIsValid)
+                else if (firstName != null && lastName != null && uniqueLogin != null)
                 {
-                    e = new ModelEventArgs<Student>(new Student(null, firstName!, lastName!, uniqueLogin!));
+                    e = new ModelEventArgs<Student>(new Student(firstName, lastName, uniqueLogin));
                 }
                 else
                 {
@@ -195,7 +201,7 @@ namespace DotNetCourse.AttendanceLog
 
             getAllCommand.SetHandler(() =>
             {
-                GetAllStudentEvent?.Invoke(this, new ModelEventArgs<Student>());
+                GetAllStudentEvent?.Invoke(this, ModelEventArgs<Student>.Empty);
             });
 
             studentCommand.AddCommand(addCommand);
@@ -207,11 +213,11 @@ namespace DotNetCourse.AttendanceLog
             return studentCommand;
         }
 
-        public event ModelEventHandler<Lecture> AddLectureEvent = default!;
-        public event ModelEventHandler<Lecture> GetLectureEvent = default!;
-        public event ModelEventHandler<Lecture> UpdateLectureEvent = default!;
-        public event ModelEventHandler<Lecture> DeleteLectureEvent = default!;
-        public event ModelEventHandler<Lecture> GetAllLectureEvent = default!;
+        public event EventHandler<ModelEventArgs<Lecture>>? AddLectureEvent;
+        public event EventHandler<ModelEventArgs<Lecture>>? GetLectureEvent;
+        public event EventHandler<ModelEventArgs<Lecture>>? UpdateLectureEvent;
+        public event EventHandler<ModelEventArgs<Lecture>>? DeleteLectureEvent;
+        public event EventHandler<ModelEventArgs<Lecture>>? GetAllLectureEvent;
 
         private Command CreateLectureCommandBranch()
         {
@@ -239,12 +245,25 @@ namespace DotNetCourse.AttendanceLog
 
             addCommand.SetHandler((date, course, topic) =>
             {
-                if (course == null || topic == null)
+                if (date < new DateTime(1900, 1, 1) || date > DateTime.Now)
+                {
+                    Console.WriteLine("Invalid date! Lecture date cannot be less than 1900.01.01 and greater than current date.");
+
                     return;
+                }
 
-                var lecture = new Lecture(null, date, course, topic);
+                ModelEventArgs<Lecture> e;
 
-                AddLectureEvent?.Invoke(this, new ModelEventArgs<Lecture>(lecture));
+                if (course != null && topic != null)
+                {
+                    e = new ModelEventArgs<Lecture>(new Lecture(date, course, topic));
+                }
+                else
+                {
+                    return;
+                }
+
+                AddLectureEvent?.Invoke(this, e);
             },
             dateRequiredOption,
             courseRequiredOption,
@@ -261,25 +280,22 @@ namespace DotNetCourse.AttendanceLog
 
             getCommand.SetHandler((id, date, course, topic) =>
             {
-                bool lectureIdIsValid = id != 0;
-                bool lectureDataIsValid = course != null && topic != null;
-
                 ModelEventArgs<Lecture> e;
 
-                if (lectureIdIsValid && !lectureDataIsValid)
+                if (id > 0)
                 {
-                    e = new ModelEventArgs<Lecture>(new Index<int>(id));
+                    e = new ModelEventArgs<Lecture>(new Identifier<int>(id));
                 }
-                else if (!lectureIdIsValid && lectureDataIsValid)
+                else if (course != null && topic != null)
                 {
                     if (date < new DateTime(1900, 1, 1) || date > DateTime.Now)
                     {
-                        Console.WriteLine("Invalid date! Lecture date must be greater than 1900.01.01 and less than current date.");
+                        Console.WriteLine("Invalid date! Lecture date cannot be less than 1900.01.01 and greater than current date.");
 
                         return;
                     }
 
-                    e = new ModelEventArgs<Lecture>(new Lecture(null, date, course!, topic!));
+                    e = new ModelEventArgs<Lecture>(new Lecture(date, course, topic));
                 }
                 else
                 {
@@ -304,12 +320,25 @@ namespace DotNetCourse.AttendanceLog
 
             updateCommand.SetHandler((id, date, course, topic) => 
             {
-                if (course == null || topic == null)
+                if (date < new DateTime(1900, 1, 1) || date > DateTime.Now)
+                {
+                    Console.WriteLine("Invalid date! Lecture date cannot be less than 1900.01.01 and greater than current date.");
+
                     return;
+                }
 
-                var lecture = new Lecture(new Index<int>(id), date, course, topic);
+                ModelEventArgs<Lecture> e;
 
-                UpdateLectureEvent?.Invoke(this, new ModelEventArgs<Lecture>(lecture));
+                if (id > 0 && course != null && topic != null)
+                {
+                    e = new ModelEventArgs<Lecture>(new Lecture(id, date, course, topic));
+                }
+                else
+                {
+                    return;
+                }
+
+                UpdateLectureEvent?.Invoke(this, e);
             },
             idRequiredOption,
             dateRequiredOption,
@@ -327,25 +356,22 @@ namespace DotNetCourse.AttendanceLog
 
             deleteCommand.SetHandler((id, date, course, topic) =>
             {
-                bool lectureIdIsValid = id != 0;
-                bool lectureDataIsValid = course != null && topic != null;
-
                 ModelEventArgs<Lecture> e;
 
-                if (lectureIdIsValid && !lectureDataIsValid)
+                if (id > 0)
                 {
-                    e = new ModelEventArgs<Lecture>(new Index<int>(id));
+                    e = new ModelEventArgs<Lecture>(new Identifier<int>(id));
                 }
-                else if (!lectureIdIsValid && lectureDataIsValid)
+                else if (course != null && topic != null)
                 {
                     if (date < new DateTime(1900, 1, 1) || date > DateTime.Now)
                     {
-                        Console.WriteLine("Invalid date! Lecture date must be greater than 1900.01.01 and less than current date.");
+                        Console.WriteLine("Invalid date! Lecture date cannot be less than 1900.01.01 and greater than current date.");
 
                         return;
                     }
 
-                    e = new ModelEventArgs<Lecture>(new Lecture(null, date, course!, topic!));
+                    e = new ModelEventArgs<Lecture>(new Lecture(date, course, topic));
                 }
                 else
                 {
@@ -365,7 +391,7 @@ namespace DotNetCourse.AttendanceLog
 
             getAllCommand.SetHandler(() => 
             {
-                GetAllLectureEvent?.Invoke(this, new ModelEventArgs<Lecture>());
+                GetAllLectureEvent?.Invoke(this, ModelEventArgs<Lecture>.Empty);
             });
 
             lectureCommand.AddCommand(addCommand);
@@ -377,10 +403,10 @@ namespace DotNetCourse.AttendanceLog
             return lectureCommand;
         }
 
-        public event ModelEventHandler<Attendance> AddAttendanceEvent = default!;
-        public event ModelEventHandler<Attendance> GetAttendanceEvent = default!;
-        public event ModelEventHandler<Attendance> DeleteAttendanceEvent = default!;
-        public event ModelEventHandler<Attendance> GetAllAttendanceEvent = default!;
+        public event EventHandler<ModelEventArgs<Attendance>>? AddAttendanceEvent;
+        public event EventHandler<ModelEventArgs<Attendance>>? GetAttendanceEvent;
+        public event EventHandler<ModelEventArgs<Attendance>>? DeleteAttendanceEvent;
+        public event EventHandler<ModelEventArgs<Attendance>>? GetAllAttendanceEvent;
 
         private Command CreateAttendanceCommandBranch()
         {
@@ -405,14 +431,18 @@ namespace DotNetCourse.AttendanceLog
                 if (lectureId == 0 || studentId == 0)
                     return;
 
-                Attendance attendance;
+                ModelEventArgs<Attendance> e;
 
                 if (mark == 0)
-                    attendance = new Attendance(new Index<int, int>(lectureId, studentId), null);
+                {
+                    e = new ModelEventArgs<Attendance>(new Identifier<int, int>(lectureId, studentId));
+                }
                 else
-                    attendance = new Attendance(new Index<int, int>(lectureId, studentId), mark);
+                {
+                    e = new ModelEventArgs<Attendance>(new Attendance(lectureId, studentId, mark));
+                }
 
-                AddAttendanceEvent?.Invoke(this, new ModelEventArgs<Attendance>(attendance));
+                AddAttendanceEvent?.Invoke(this, e);
             },
             lectureIdRequiredOption,
             studentIdRequiredOption,
@@ -430,7 +460,7 @@ namespace DotNetCourse.AttendanceLog
                 if (lectureId == 0 || studentId == 0)
                     return;
 
-                GetAttendanceEvent?.Invoke(this, new ModelEventArgs<Attendance>(new Index<int, int>(lectureId, studentId)));
+                GetAttendanceEvent?.Invoke(this, new ModelEventArgs<Attendance>(new Identifier<int, int>(lectureId, studentId)));
             },
             lectureIdRequiredOption,
             studentIdRequiredOption);
@@ -447,7 +477,7 @@ namespace DotNetCourse.AttendanceLog
                 if (lectureId == 0 || studentId == 0)
                     return;
 
-                DeleteAttendanceEvent?.Invoke(this, new ModelEventArgs<Attendance>(new Index<int, int>(lectureId, studentId)));
+                DeleteAttendanceEvent?.Invoke(this, new ModelEventArgs<Attendance>(new Identifier<int, int>(lectureId, studentId)));
             },
             lectureIdRequiredOption,
             studentIdRequiredOption);
@@ -458,7 +488,7 @@ namespace DotNetCourse.AttendanceLog
 
             getAllCommand.SetHandler(() =>
             {
-                GetAllAttendanceEvent?.Invoke(this, new ModelEventArgs<Attendance>());
+                GetAllAttendanceEvent?.Invoke(this, ModelEventArgs<Attendance>.Empty);
             });
 
             attendanceCommand.AddCommand(addCommand);

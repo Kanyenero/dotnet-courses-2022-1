@@ -16,22 +16,22 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Student
             return Provider.Add(firstName, lastName, uniqueLogin);
         }
 
-        public Models.Student Get(Index<int> id)
+        public Models.Student? Get(int id)
         {
             return Provider.Get(id);
         }
 
-        public Models.Student Get(string firstName, string lastName, string uniqueLogin)
+        public Models.Student? Get(string firstName, string lastName, string uniqueLogin)
         {
             return Provider.Get(firstName, lastName, uniqueLogin);
         }
 
-        public int Update(Index<int> id, string firstName, string lastName, string uniqueLogin)
+        public int Update(int id, string firstName, string lastName, string uniqueLogin)
         {
             return Provider.Update(id, firstName, lastName, uniqueLogin);
         }
 
-        public int Delete(Index<int> id)
+        public int Delete(int id)
         {
             return Provider.Delete(id);
         }
@@ -64,22 +64,21 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Student
             if (e == null)
                 return;
 
-            Models.Student model = null!;
+            Models.Student? model = null;
 
-            if (e.Id == null && e.Model != null)
+            if (e.Id != null && e.Model == null)
+            {
+                model = Get(((Identifier<int>)e.Id).Value);
+            }
+            else if (e.Id == null && e.Model != null)
             {
                 model = Get(e.Model.FirstName, e.Model.LastName, e.Model.UniqueLogin);
             }
 
-            if (e.Id != null && e.Model == null)
-            {
-                model = Get((Index<int>)e.Id);
-            }
-
             if (model == null)
-                return;
-
-            Console.WriteLine(model);
+                Console.WriteLine("Model read failed.");
+            else
+                Console.WriteLine(model);
         }
 
         public void OnUpdate(object? sender, ModelEventArgs<Models.Student> e)
@@ -87,7 +86,7 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Student
             if (e == null || e.Model == null)
                 return;
 
-            int rowsAffected = Update((Index<int>)e.Id, e.Model.FirstName, e.Model.LastName, e.Model.UniqueLogin);
+            int rowsAffected = Update(e.Model.Id, e.Model.FirstName, e.Model.LastName, e.Model.UniqueLogin);
 
             if (rowsAffected == 0)
                 Console.WriteLine("An error occurred while updating.");
@@ -102,14 +101,13 @@ namespace DotNetCourse.AttendanceLog.BusinessLogic.Student
 
             int rowsAffected = 0;
 
-            if (e.Id == null && e.Model != null)
-            {
-                rowsAffected = Delete(e.Model.FirstName, e.Model.LastName, e.Model.UniqueLogin);
-            }
-
             if (e.Id != null && e.Model == null)
             {
-                rowsAffected = Delete((Index<int>)e.Id);
+                rowsAffected = Delete(((Identifier<int>)e.Id).Value);
+            }
+            else if (e.Id == null && e.Model != null)
+            {
+                rowsAffected = Delete(e.Model.FirstName, e.Model.LastName, e.Model.UniqueLogin);
             }
 
             if (rowsAffected == 0)

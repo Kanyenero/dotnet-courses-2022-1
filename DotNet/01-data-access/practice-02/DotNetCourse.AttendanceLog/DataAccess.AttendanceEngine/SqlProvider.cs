@@ -1,148 +1,69 @@
-﻿using System.Data.SqlClient;
+﻿using Microsoft.EntityFrameworkCore;
 using DotNetCourse.AttendanceLog.Models;
 
 namespace DotNetCourse.AttendanceLog.DataAccess.AttendanceEngine
 {
     public class SqlProvider : IDataProvider
     {
-        public string ConnectionString { get; private set; }
+        private readonly DbContextOptions<AttendanceLogContext> _options;
 
-        public SqlProvider(string connectionString) => ConnectionString = connectionString;
+        public SqlProvider(string connectionString)
+        {
+            var dbContextOptionsBuilder = new DbContextOptionsBuilder<AttendanceLogContext>();
 
-        public int Add(Index<int, int> id, int? mark)
+            _options = dbContextOptionsBuilder
+                .UseSqlServer(connectionString)
+                .Options;
+        }
+
+        public int Add(int lectureId, int studentId, int? mark)
         {
             int rowsAffected = 0;
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                connection.Open();
+                var modelToAdd = new Attendance(lectureId, studentId, mark);
 
-                var command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandType = System.Data.CommandType.StoredProcedure,
-                    CommandText = "MarkAttendance"
-                };
+                db.Attendances.Add(modelToAdd);
 
-                command.Parameters.AddWithValue("@LectureID", id.Value1);
-                command.Parameters.AddWithValue("@StudentID", id.Value2);
-
-                if (mark == null)
-                    command.Parameters.AddWithValue("@Mark", DBNull.Value);
-                else
-                    command.Parameters.AddWithValue("@Mark", mark);
-
-                try
-                {
-                    rowsAffected = (int)command.ExecuteScalar();
-                }
-                catch (SqlException)
-                {
-                }
+                rowsAffected = db.SaveChanges();
             }
 
             return rowsAffected;
         }
 
-        public Attendance Get(Index<int, int> id)
+        public Attendance? Get(int lectureId, int studentId)
         {
-            var attendance = new Attendance();
+            var modelToGet = new Attendance();
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression =
-                    "SELECT\r\n\t" +
-                        "a.LectureID,\r\n\t" +
-                        "l.[Date],\r\n\t" +
-                        "l.Course,\r\n\t" +
-                        "l.Topic,\r\n\t" +
-                        "a.StudentID,\r\n\t" +
-                        "s.UQ_Login,\r\n\t" +
-                        "s.FirstName,\r\n\t" +
-                        "s.LastName,\r\n\t" +
-                        "a.Mark\r\n" +
-                    "FROM \r\n\t" +
-                        "Lectures AS l\r\n" +
-                    "JOIN\r\n\t" +
-                        "Attendances AS a ON l.LectureID = a.LectureID\r\nJOIN\r\n\tStudents As s ON s.StudentID = a.StudentID\r\n" +
-                    "WHERE\r\n\t" +
-                        "a.LectureID = @lectureId AND a.StudentID = @studentId";
-
-                var command = new SqlCommand(sqlExpression, connection);
-
-                var lectureIdParam = new SqlParameter("@lectureId", id.Value1);
-                var studentIdParam = new SqlParameter("@studentId", id.Value2);
-
-                command.Parameters.Add(lectureIdParam);
-                command.Parameters.Add(studentIdParam);
-
-                connection.Open();
-
-                try
-                {
-                    var reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-                    {
-                        int LectureIDColumnIndex            = 0;
-                        int LectureDateColumnIndex          = 1;
-                        int LectureCourseColumnIndex        = 2;
-                        int LectureTopicColumnIndex         = 3;
-                        int StudentIDColumnIndex            = 4;
-                        int StudentUniqueLoginColumnIndex   = 5;
-                        int StudentFirstNameColumnIndex     = 6;
-                        int StudentLastNameColumnIndex      = 7;
-                        int MarkColumnIndex                 = 8;
-
-                        while (reader.Read())
-                        {
-                            attendance.Id.Value1            = (int)reader.GetValue(LectureIDColumnIndex);
-                            attendance.LectureDate          = (DateTime)reader.GetValue(LectureDateColumnIndex);
-                            attendance.LectureCourse        = (string)reader.GetValue(LectureCourseColumnIndex);
-                            attendance.LectureTopic         = (string)reader.GetValue(LectureTopicColumnIndex);
-                            attendance.Id.Value2            = (int)reader.GetValue(StudentIDColumnIndex);
-                            attendance.StudentUniqueLogin   = (string)reader.GetValue(StudentUniqueLoginColumnIndex);
-                            attendance.StudentFirstName     = (string)reader.GetValue(StudentFirstNameColumnIndex);
-                            attendance.StudentLastName      = (string)reader.GetValue(StudentLastNameColumnIndex);
-
-                            if (!reader.IsDBNull(MarkColumnIndex))
-                                attendance.Mark = (int)reader.GetValue(MarkColumnIndex);
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                }
+                modelToGet = db.Attendances
+                    .SingleOrDefault(model =>
+                        model.LectureId == lectureId &&
+                        model.StudentId == studentId);
             }
 
-            return attendance;
+            return modelToGet;
         }
 
-        public int Delete(Index<int, int> id)
+        public int Delete(int lectureId, int studentId)
         {
             int rowsAffected = 0;
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression = "DELETE FROM Attendances WHERE LectureID = @lectureId AND StudentID = @studentId";
+                var modelToRemove = db.Attendances
+                    .SingleOrDefault(model => 
+                        model.LectureId == lectureId &&
+                        model.StudentId == studentId);
 
-                var command = new SqlCommand(sqlExpression, connection);
+                if (modelToRemove == null)
+                    return rowsAffected;
 
-                var lectureIdParam = new SqlParameter("@lectureId", id.Value1);
-                var studentIdParam = new SqlParameter("@studentId", id.Value2);
+                db.Attendances.Remove(modelToRemove);
 
-                command.Parameters.Add(lectureIdParam);
-                command.Parameters.Add(studentIdParam);
-
-                connection.Open();
-
-                try
-                {
-                    rowsAffected = command.ExecuteNonQuery();
-                }
-                catch (SqlException)
-                {
-                }
+                rowsAffected = db.SaveChanges();
             }
 
             return rowsAffected;
@@ -150,97 +71,44 @@ namespace DotNetCourse.AttendanceLog.DataAccess.AttendanceEngine
 
         public IEnumerable<Attendance> GetAll()
         {
-            var attendances = new List<Attendance>();
+            var modelsToGet = new List<Attendance>();
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression =
-                    "SELECT\n" +
-                        "l.LectureID,\n" +
-                        "l.Date,\n" +
-                        "l.Course,\n" +
-                        "l.Topic,\n" +
-                        "sa.StudentID,\n" +
-                        "sa.UQ_Login,\n" +
-                        "sa.FirstName,\n" +
-                        "sa.LastName,\n" +
-                        "sa.Mark\n" +
-                    "FROM Lectures AS l\n" +
-                        "FULL JOIN\n" +
-                        "(SELECT\n" +
-                            "s.StudentID,\n" +
-                            "s.UQ_Login,\n" +
-                            "s.FirstName,\n" +
-                            "s.LastName,\n" +
-                            "a.LectureID,\n" +
-                            "a.Mark\n" +
-                        "FROM\n" +
-                            "Students AS s\n" +
-                        "LEFT JOIN " +
-                            "Attendances AS a ON s.StudentID = a.StudentID) AS sa\n" +
-                        "ON sa.LectureID = l.LectureID";
-
-                var command = new SqlCommand(sqlExpression, connection);
-
-                connection.Open();
-
-                try
-                {
-                    var reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-                    {
-                        int LectureIDColumnIndex            = 0;
-                        int LectureDateColumnIndex          = 1;
-                        int LectureCourseColumnIndex        = 2;
-                        int LectureTopicColumnIndex         = 3;
-                        int StudentIDColumnIndex            = 4;
-                        int StudentUniqueLoginColumnIndex   = 5;
-                        int StudentFirstNameColumnIndex     = 6;
-                        int StudentLastNameColumnIndex      = 7;
-                        int MarkColumnIndex                 = 8;
-
-                        while (reader.Read())
+                modelsToGet = db.Lectures
+                    .Join(
+                        db.Attendances,
+                        l => l.Id,
+                        a => a.LectureId,
+                        (lecture, attendance) => new
                         {
-                            var attendance = new Attendance();
-
-                            if (!reader.IsDBNull(LectureIDColumnIndex))
-                                attendance.Id.Value1 = (int)reader.GetValue(LectureIDColumnIndex);
-
-                            if (!reader.IsDBNull(LectureDateColumnIndex))
-                                attendance.LectureDate = (DateTime)reader.GetValue(LectureDateColumnIndex);
-
-                            if (!reader.IsDBNull(LectureCourseColumnIndex))
-                                attendance.LectureCourse = (string)reader.GetValue(LectureCourseColumnIndex);
-
-                            if (!reader.IsDBNull(LectureTopicColumnIndex))
-                                attendance.LectureTopic = (string)reader.GetValue(LectureTopicColumnIndex);
-
-                            if (!reader.IsDBNull(StudentIDColumnIndex))
-                                attendance.Id.Value2 = (int)reader.GetValue(StudentIDColumnIndex);
-
-                            if (!reader.IsDBNull(StudentUniqueLoginColumnIndex))
-                                attendance.StudentUniqueLogin = (string)reader.GetValue(StudentUniqueLoginColumnIndex);
-
-                            if (!reader.IsDBNull(StudentFirstNameColumnIndex))
-                                attendance.StudentFirstName = (string)reader.GetValue(StudentFirstNameColumnIndex);
-
-                            if (!reader.IsDBNull(StudentLastNameColumnIndex))
-                                attendance.StudentLastName = (string)reader.GetValue(StudentLastNameColumnIndex);
-
-                            if (!reader.IsDBNull(MarkColumnIndex))
-                                attendance.Mark = (int)reader.GetValue(MarkColumnIndex);
-
-                            attendances.Add(attendance);
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                }
+                            attendance.LectureId,
+                            lecture.Date,
+                            lecture.Course,
+                            lecture.Topic,
+                            attendance.StudentId,
+                            attendance.Mark
+                        })
+                    .Join(
+                        db.Students,
+                        la => la.StudentId,
+                        s => s.Id,
+                        (la, s) => new Attendance
+                        {
+                            LectureId = la.LectureId,
+                            LectureDate = la.Date,
+                            LectureCourse = la.Course,
+                            LectureTopic = la.Topic,
+                            StudentId = la.StudentId,
+                            StudentUniqueLogin = s.UniqueLogin,
+                            StudentFirstName = s.FirstName,
+                            StudentLastName = s.LastName,
+                            Mark = la.Mark
+                        })
+                    .ToList();
             }
 
-            return attendances;
+            return modelsToGet;
         }
     }
 }

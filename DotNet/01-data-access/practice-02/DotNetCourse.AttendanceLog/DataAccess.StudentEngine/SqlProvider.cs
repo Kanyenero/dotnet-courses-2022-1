@@ -1,219 +1,103 @@
-﻿using DotNetCourse.AttendanceLog.Models;
-using System.Data.SqlClient;
+﻿using Microsoft.EntityFrameworkCore;
+using DotNetCourse.AttendanceLog.Models;
 
 namespace DotNetCourse.AttendanceLog.DataAccess.StudentEngine
 {
     public class SqlProvider : IDataProvider
     {
-        public string ConnectionString { get; private set; }
+        private readonly DbContextOptions<AttendanceLogContext> _options;
 
-        public SqlProvider(string connectionString) => ConnectionString = connectionString;
+        public SqlProvider(string connectionString)
+        {
+            var dbContextOptionsBuilder = new DbContextOptionsBuilder<AttendanceLogContext>();
+
+            _options = dbContextOptionsBuilder
+                .UseSqlServer(connectionString)
+                .Options;
+        }
 
         public int Add(string firstName, string lastName, string uniqueLogin)
         {
             int rowsAffected = 0;
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression =
-                    "INSERT INTO Students\r\n\t" +
-                        "(FirstName, LastName, UQ_Login)\r\n" +
-                    "VALUES (@firstName, @lastName, @uniqueLogin)";
+                var modelToAdd = new Student(firstName, lastName, uniqueLogin);
 
-                var command = new SqlCommand(sqlExpression, connection);
+                db.Students.Add(modelToAdd);
 
-                var firstNameParam = new SqlParameter("@firstName", firstName);
-                var lastNameParam = new SqlParameter("@lastName", lastName);
-                var uniqueLoginParam = new SqlParameter("@uniqueLogin", uniqueLogin);
-
-                command.Parameters.Add(firstNameParam);
-                command.Parameters.Add(lastNameParam);
-                command.Parameters.Add(uniqueLoginParam);
-
-                connection.Open();
-
-                try
-                {
-                    rowsAffected = command.ExecuteNonQuery();
-                }
-                catch(SqlException)
-                {
-                }
+                rowsAffected = db.SaveChanges();
             }
 
             return rowsAffected;
         }
 
-        public Student Get(Index<int> id)
+        public Student? Get(int id)
         {
-            var student = new Student();
+            var modelToGet = new Student();
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression =
-                    "SELECT\r\n\t" +
-                        "StudentID,\r\n\t" +
-                        "UQ_Login,\r\n\t" +
-                        "FirstName,\r\n\t" +
-                        "LastName\r\n" +
-                    "FROM\r\n\t" +
-                        "Students\r\n" +
-                    "WHERE\r\n\t" +
-                        "StudentID = @studentId";
-
-                var command = new SqlCommand(sqlExpression, connection);
-
-                var idParam = new SqlParameter("@studentId", id.Value);
-
-                command.Parameters.Add(idParam);
-
-                connection.Open();
-
-                try
-                {
-                    var reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-                    {
-                        int idColumnIndex           = 0;
-                        int uniqueLoginColumnIndex  = 1;
-                        int firstNameColumnIndex    = 2;
-                        int lastNameColumnIndex     = 3;
-
-                        while (reader.Read())
-                        {
-                            student.Id.Value = (int)reader.GetValue(idColumnIndex);
-                            student.UniqueLogin = (string)reader.GetValue(uniqueLoginColumnIndex);
-                            student.FirstName = (string)reader.GetValue(firstNameColumnIndex);
-                            student.LastName = (string)reader.GetValue(lastNameColumnIndex);
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                }
+                modelToGet = db.Students
+                    .SingleOrDefault(model => model.Id == id);
             }
 
-            return student;
+            return modelToGet;
         }
 
-        public Student Get(string firstName, string lastName, string uniqueLogin)
+        public Student? Get(string firstName, string lastName, string uniqueLogin)
         {
-            var student = new Student();
+            var modelToGet = new Student();
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression =
-                    "SELECT\r\n\t" +
-                        "StudentID,\r\n\t" +
-                        "UQ_Login,\r\n\t" +
-                        "FirstName,\r\n\t" +
-                        "LastName\r\n" +
-                    "FROM\r\n\t" +
-                        "Students\r\n" +
-                    "WHERE\r\n\t" +
-                        "UQ_Login = @uniqueLogin AND FirstName = @firstName AND LastName = @lastName";
-
-                var command = new SqlCommand(sqlExpression, connection);
-
-                var uniqueLoginParam = new SqlParameter("@uniqueLogin", uniqueLogin);
-                var firstNameParam = new SqlParameter("@firstName", firstName);
-                var lastNameParam = new SqlParameter("@lastName", lastName);
-
-                command.Parameters.Add(uniqueLoginParam);
-                command.Parameters.Add(firstNameParam);
-                command.Parameters.Add(lastNameParam);
-
-                connection.Open();
-
-                try
-                {
-                    var reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-                    {
-                        int idColumnIndex           = 0;
-                        int uniqueLoginColumnIndex  = 1;
-                        int firstNameColumnIndex    = 2;
-                        int lastNameColumnIndex     = 3;
-
-                        while (reader.Read())
-                        {
-                            student.Id.Value = (int)reader.GetValue(idColumnIndex);
-                            student.UniqueLogin = (string)reader.GetValue(uniqueLoginColumnIndex);
-                            student.FirstName = (string)reader.GetValue(firstNameColumnIndex);
-                            student.LastName = (string)reader.GetValue(lastNameColumnIndex);
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                }
+                modelToGet = db.Students
+                    .SingleOrDefault(model => 
+                        model.FirstName == firstName && 
+                        model.LastName == lastName && 
+                        model.UniqueLogin == uniqueLogin);
             }
 
-            return student;
+            return modelToGet;
         }
 
-        public int Update(Index<int> id, string firstName, string lastName, string uniqueLogin)
+        public int Update(int id, string firstName, string lastName, string uniqueLogin)
         {
             int rowsAffected = 0;
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression =
-                    "UPDATE Students\r\n" +
-                    "SET FirstName = @firstName, LastName = @lastName, UQ_Login = @uniqueLogin\r\n" +
-                    "WHERE StudentID = @studentId";
+                var modelToUpdate = db.Students
+                    .SingleOrDefault(model => model.Id == id);
 
-                var command = new SqlCommand(sqlExpression, connection);
+                if (modelToUpdate == null)
+                    return rowsAffected;
 
-                var idParam = new SqlParameter("@studentId", id.Value);
-                var firstNameParam = new SqlParameter("@firstName", firstName);
-                var lastNameParam = new SqlParameter("@lastName", lastName);
-                var uniqueLoginParam = new SqlParameter("@uniqueLogin", uniqueLogin);
+                modelToUpdate.FirstName = firstName;
+                modelToUpdate.LastName = lastName;
+                modelToUpdate.UniqueLogin = uniqueLogin;
 
-                command.Parameters.Add(idParam);
-                command.Parameters.Add(firstNameParam);
-                command.Parameters.Add(lastNameParam);
-                command.Parameters.Add(uniqueLoginParam);
-
-                connection.Open();
-
-                try
-                {
-                    rowsAffected = command.ExecuteNonQuery();
-                }
-                catch (SqlException)
-                {
-                }
+                rowsAffected = db.SaveChanges();
             }
 
             return rowsAffected;
         }
 
-        public int Delete(Index<int> id)
+        public int Delete(int id)
         {
             int rowsAffected = 0;
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression = "DELETE FROM Students WHERE StudentID = @studentId";
+                var modelToRemove = db.Students
+                    .SingleOrDefault(model => model.Id == id);
 
-                var command = new SqlCommand(sqlExpression, connection);
+                if (modelToRemove == null)
+                    return rowsAffected;
 
-                var idParam = new SqlParameter("@studentId", id.Value);
+                db.Students.Remove(modelToRemove);
 
-                command.Parameters.Add(idParam);
-
-                connection.Open();
-
-                try
-                {
-                    rowsAffected = command.ExecuteNonQuery();
-                }
-                catch (SqlException)
-                {
-                }
+                rowsAffected = db.SaveChanges();
             }
 
             return rowsAffected;
@@ -223,33 +107,20 @@ namespace DotNetCourse.AttendanceLog.DataAccess.StudentEngine
         {
             int rowsAffected = 0;
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression = 
-                    "DELETE FROM\r\n\t" +
-                        "Students\r\n" +
-                    "WHERE\r\n\t" +
-                        "FirstName = @firstName AND LastName = @lastName AND UQ_Login = @uniqueLogin";
+                var modelToRemove = db.Students
+                    .SingleOrDefault(model => 
+                        model.FirstName == firstName && 
+                        model.LastName == lastName && 
+                        model.UniqueLogin == uniqueLogin);
 
-                var command = new SqlCommand(sqlExpression, connection);
+                if (modelToRemove == null)
+                    return rowsAffected;
 
-                var firstNameParam = new SqlParameter("@firstName", firstName);
-                var lastNameParam = new SqlParameter("@lastName", lastName);
-                var uniqueLoginParam = new SqlParameter("@uniqueLogin", uniqueLogin);
+                db.Students.Remove(modelToRemove);
 
-                command.Parameters.Add(firstNameParam);
-                command.Parameters.Add(lastNameParam);
-                command.Parameters.Add(uniqueLoginParam);
-
-                connection.Open();
-
-                try
-                {
-                    rowsAffected = command.ExecuteNonQuery();
-                }
-                catch (SqlException)
-                {
-                }
+                rowsAffected = db.SaveChanges();
             }
 
             return rowsAffected;
@@ -257,52 +128,14 @@ namespace DotNetCourse.AttendanceLog.DataAccess.StudentEngine
 
         public IEnumerable<Student> GetAll()
         {
-            var students = new List<Student>();
+            var modelsToGet = new List<Student>();
 
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var db = new AttendanceLogContext(_options))
             {
-                string sqlExpression =
-                    "SELECT\r\n\t" +
-                        "StudentID,\r\n\t" +
-                        "UQ_Login,\r\n\t" +
-                        "FirstName,\r\n\t" +
-                        "LastName\r\n" +
-                    "FROM Students";
-
-                var command = new SqlCommand(sqlExpression, connection);
-
-                connection.Open();
-
-                try
-                {
-                    var reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-                    {
-                        int idColumnIndex = 0;
-                        int uniqueLoginColumnIndex = 1;
-                        int firstNameColumnIndex = 2;
-                        int lastNameColumnIndex = 3;
-
-                        while (reader.Read())
-                        {
-                            var student = new Student();
-
-                            student.Id.Value = (int)reader.GetValue(idColumnIndex);
-                            student.UniqueLogin = (string)reader.GetValue(uniqueLoginColumnIndex);
-                            student.FirstName = (string)reader.GetValue(firstNameColumnIndex);
-                            student.LastName = (string)reader.GetValue(lastNameColumnIndex);
-
-                            students.Add(student);
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                }
+                modelsToGet = db.Students.ToList();
             }
 
-            return students;
+            return modelsToGet;
         }
     }
 }

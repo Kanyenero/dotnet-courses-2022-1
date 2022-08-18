@@ -6,13 +6,13 @@ namespace DotNetCourse.AttendanceLog.DataAccess.StudentEngine
     {
         int Add(string firstName, string lastName, string uniqueLogin);
 
-        Student Get(Index<int> id);
+        Student? Get(int id);
 
-        Student Get(string firstName, string lastName, string uniqueLogin);
+        Student? Get(string firstName, string lastName, string uniqueLogin);
 
-        int Update(Index<int> id, string firstName, string lastName, string uniqueLogin);
+        int Update(int id, string firstName, string lastName, string uniqueLogin);
 
-        int Delete(Index<int> id);
+        int Delete(int id);
 
         int Delete(string firstName, string lastName, string uniqueLogin);
 
