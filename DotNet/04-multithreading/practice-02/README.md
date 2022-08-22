@@ -38,7 +38,7 @@
     
     ## Результаты
 
-...\MultithreadingBasicsApp\logs
+...\MultithreadingBasicsApp\logs\trace-2022-08-22_15.12.22-client.txt
 ```
 [2022.08.22 15:12:22.666256] [App Thread] Started
 [2022.08.22 15:12:22.672647] [Reader 2] Started
